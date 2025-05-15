@@ -41,19 +41,20 @@ class APIClient:
         self.message_callback = callback
 
     def send_message(self, sender_id, receiver_id, content):
-        if not self.sio.connected:
-            print("Socket.io non connecté, tentative de reconnexion...")
-            try:
-                self.sio.connect(self.WS_URL, auth={"token": self.token})
-                time.sleep(1)  # Attendre que la connexion s'établisse
-            except socketio.exceptions.ConnectionError as e:
-                print(f"Échec de la reconnexion : {e}")
-                raise ValueError(f"Socket.io non connecté : {e}")
-        self.sio.emit("send_message", {
-            "senderId": sender_id,
-            "receiverId": receiver_id,
-            "content": content
-        })
+        try:
+            headers = {"Authorization": f"Bearer {self.token}"} if self.token else {}
+            response = requests.post(
+                "http://localhost:3000/api/message/send",
+                json={"senderId": sender_id, "receiverId": receiver_id, "content": content},
+                headers=headers
+            )
+            response.raise_for_status()
+            print("Message envoyé via HTTP :", response.json())
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de l'envoi du message via HTTP : {e}")
+            raise ValueError(f"Échec de l'envoi du message : {e}")
+
 
     def clean_response(self, text):
         """Nettoie la réponse JSON en extrayant le premier objet ou tableau JSON valide."""
