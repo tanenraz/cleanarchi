@@ -2,8 +2,8 @@
 import requests
 
 class APIClient:
-    BASE_URL = "http://localhost:3000/api/users"
-    MESSAGES_URL = "http://localhost:3000/api/message"
+    BASE_URL = "http://192.168.43.190:3000/api/users"
+    MESSAGES_URL = "http://192.168.43.190:3000/api/message"
 
     def __init__(self):
         self.token = None

@@ -28,7 +28,7 @@ class MessageWindow:
         self.receiver_id = None
         self.sender_aes_key = None
         self.receiver_aes_key = None
-
+ 
         # Initialize UI
         self._setup_ui()
         self._load_sender_info()
